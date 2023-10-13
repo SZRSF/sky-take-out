@@ -7,8 +7,8 @@ public interface EmployeeService {
 
     /**
      * 员工登录
-     * @param employeeLoginDTO
-     * @return
+     * @param employeeLoginDTO 前端登录请求数据
+     * @return 返回数据库查询结果
      */
     Employee login(EmployeeLoginDTO employeeLoginDTO);
 

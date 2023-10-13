@@ -20,6 +20,7 @@ import java.util.Map;
 
 /**
  * 员工管理
+ * @author zengzhicheng
  */
 @RestController
 @RequestMapping("/admin/employee")
@@ -34,8 +35,8 @@ public class EmployeeController {
     /**
      * 登录
      *
-     * @param employeeLoginDTO
-     * @return
+     * @param employeeLoginDTO 接受前端登录请求数据
+     * @return 返回登录结果
      */
     @PostMapping("/login")
     public Result<EmployeeLoginVO> login(@RequestBody EmployeeLoginDTO employeeLoginDTO) {
