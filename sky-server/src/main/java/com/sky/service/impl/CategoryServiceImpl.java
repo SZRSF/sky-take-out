@@ -1,9 +1,13 @@
 package com.sky.service.impl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.sky.context.BaseContext;
 import com.sky.dto.CategoryDTO;
+import com.sky.dto.CategoryPageQueryDTO;
 import com.sky.entity.Category;
 import com.sky.mapper.CategoryMapper;
+import com.sky.result.PageResult;
 import com.sky.service.CategoryService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -50,5 +54,21 @@ public class CategoryServiceImpl implements CategoryService {
 
         // 5.数据库插入新增分类
         categoryMapper.insert(category);
+    }
+
+    /**
+     * 分类分页查询业务实现
+     *
+     * @param categoryPageQueryDTO 分页查询参数
+     * @return 返回查询结果
+     */
+    @Override
+    public PageResult pageQuery(CategoryPageQueryDTO categoryPageQueryDTO) {
+        // 1.使用分页插件设置分页参数
+        PageHelper.startPage(categoryPageQueryDTO.getPage(), categoryPageQueryDTO.getPageSize());
+        // 2.进行查询
+        Page<Category> page = categoryMapper.pageQuery(categoryPageQueryDTO);
+        // 3.返回查询结果
+        return new PageResult(page.getTotal(), page.getResult());
     }
 }
