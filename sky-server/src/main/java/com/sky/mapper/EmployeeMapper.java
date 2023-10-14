@@ -49,4 +49,13 @@ public interface EmployeeMapper {
      * @param employee 员工的新数据
      */
     void update(Employee employee);
+
+    /**
+     * 根据id查询
+     *
+     * @param id 员工id
+     * @return 返回查询结果
+     */
+    @Select("select * from employee where id= #{id}")
+    Employee getById(Long id);
 }
