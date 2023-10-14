@@ -113,7 +113,7 @@ public class EmployeeServiceImpl implements EmployeeService {
      * 启用禁用员工账号
      *
      * @param status 状态，1为启用 0为禁用
-     * @param id 员工id
+     * @param id     员工id
      */
     @Override
     public void startOrStop(Integer status, Long id) {
@@ -134,6 +134,22 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public Employee getById(Long id) {
         return employeeMapper.getById(id);
+    }
+
+    /**
+     * 编辑员工数据是实现类
+     * @param employeeDTO 要跟更新的员工数据
+     */
+    @Override
+    public void update(EmployeeDTO employeeDTO) {
+        Employee employee = new Employee();
+        BeanUtils.copyProperties(employeeDTO, employee);
+
+        // 设置修改人和修改时间
+        employee.setUpdateUser(BaseContext.getCurrentId());
+        employee.setUpdateTime(LocalDateTime.now());
+
+        employeeMapper.update(employee);
     }
 
 }

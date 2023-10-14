@@ -135,4 +135,18 @@ public class EmployeeController {
         log.info("要查询的员工id：{}", id);
         return Result.success(employeeService.getById(id));
     }
+
+    /**
+     * 编辑员工信息
+     *
+     * @param employeeDTO 更新员工信息
+     * @return 响应数据
+     */
+    @ApiOperation("编辑员工信息")
+    @PutMapping
+    public Result<String> update(@RequestBody EmployeeDTO employeeDTO) {
+        log.info("编辑员工：{}", employeeDTO);
+        employeeService.update(employeeDTO);
+        return Result.success();
+    }
 }

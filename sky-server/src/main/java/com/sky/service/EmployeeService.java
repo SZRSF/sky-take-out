@@ -50,4 +50,10 @@ public interface EmployeeService {
      */
     Employee getById(Long id);
 
+    /**
+     * 编辑员工信息
+     * @param employeeDTO 要跟更新的员工数据
+     */
+    void update(EmployeeDTO employeeDTO);
+
 }
