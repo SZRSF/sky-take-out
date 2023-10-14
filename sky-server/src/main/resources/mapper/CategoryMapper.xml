@@ -2,6 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.sky.mapper.CategoryMapper">
+    <!--插入新增的分类数据-->
+    <insert id="insert">
+        insert into category (type, name, sort, status, create_time, update_time, create_user, update_user)
+        values (#{type}, #{name},#{sort},#{status},#{createTime},#{updateTime},#{createUser},#{updateUser})
+    </insert>
+
     <!--分类分页查询-->
     <select id="pageQuery" resultType="com.sky.entity.Category">
         select * from category
@@ -9,7 +15,15 @@
             <if test="name != null || name == ' '">
                 and name like concat('%',#{name}, '%')
             </if>
+            <if test="type != null">
+                and type = #{type}
+            </if>
         </where>
-        order by create_time desc
+        order by sort
+    </select>
+
+    <!--根据分类查询-->
+    <select id="listQuery" resultType="com.sky.entity.Category">
+        select * from category where type = #{type} order by sort
     </select>
 </mapper>

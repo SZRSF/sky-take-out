@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 分类实现业务类
@@ -68,7 +69,20 @@ public class CategoryServiceImpl implements CategoryService {
         PageHelper.startPage(categoryPageQueryDTO.getPage(), categoryPageQueryDTO.getPageSize());
         // 2.进行查询
         Page<Category> page = categoryMapper.pageQuery(categoryPageQueryDTO);
+        log.info("" + page.getResult());
         // 3.返回查询结果
         return new PageResult(page.getTotal(), page.getResult());
+    }
+
+    /**
+     *  根据分类查询
+     *
+     * @param type 分类参数
+     * @return 返回分页查询结果
+     */
+    @Override
+    public List<Category> listQuery(String type) {
+        // 返回查询结果
+        return categoryMapper.listQuery(type);
     }
 }
