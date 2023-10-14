@@ -53,8 +53,8 @@ public class EmployeeServiceImpl implements EmployeeService {
             throw new AccountNotFoundException(MessageConstant.ACCOUNT_NOT_FOUND);
         }
 
-        //密码比对
-        // TODO 后期需要进行md5加密，然后再进行比对
+        // 密码比对,md5加密，然后再进行比对
+        password = DigestUtils.md5DigestAsHex(password.getBytes());
         if (!password.equals(employee.getPassword())) {
             //密码错误
             throw new PasswordErrorException(MessageConstant.PASSWORD_ERROR);
@@ -107,6 +107,22 @@ public class EmployeeServiceImpl implements EmployeeService {
         PageHelper.startPage(pageQueryDTO.getPage(), pageQueryDTO.getPageSize());
         Page<Employee> page = employeeMapper.pageQuery(pageQueryDTO);
         return new PageResult(page.getTotal(), page.getResult());
+    }
+
+    /**
+     * 启用禁用员工账号
+     *
+     * @param status 状态，1为启用 0为禁用
+     * @param id 员工id
+     */
+    @Override
+    public void startOrStop(Integer status, Long id) {
+        Employee employee = Employee.builder()
+                .status(status)
+                .id(id)
+                .build();
+
+        employeeMapper.update(employee);
     }
 
 }

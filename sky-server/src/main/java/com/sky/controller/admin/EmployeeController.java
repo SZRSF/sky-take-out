@@ -13,15 +13,18 @@ import com.sky.utils.JwtUtil;
 import com.sky.vo.EmployeeLoginVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * 员工管理
+ *
  * @author zengzhicheng
  */
 @RestController
@@ -69,7 +72,7 @@ public class EmployeeController {
     /**
      * 退出
      *
-     * @return
+     * @return 返回结果
      */
     @ApiOperation("员工退出登录接口")
     @PostMapping("/logout")
@@ -93,6 +96,7 @@ public class EmployeeController {
 
     /**
      * 员工分页查询
+     *
      * @param pageQueryDTO 分页查询
      * @return 返回分页数据
      */
@@ -102,5 +106,20 @@ public class EmployeeController {
         log.info("分页查询参数:{}", pageQueryDTO);
         PageResult pageResult = employeeService.pageQuery(pageQueryDTO);
         return Result.success(pageResult);
+    }
+
+    /**
+     * 启用或禁用员工账号
+     *
+     * @param status 状态，1为启用 0为禁用
+     * @param id 员工id
+     * @return 响应数据
+     */
+    @ApiOperation("启用禁用员工账号")
+    @PostMapping("/status/{status}")
+    public Result<String> startOrStop(@PathVariable Integer status, Long id){
+        log.info("启用禁用员工账号 status={}, id={}", status, id);
+        employeeService.startOrStop(status, id);
+        return Result.success();
     }
 }
