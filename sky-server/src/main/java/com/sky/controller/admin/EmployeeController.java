@@ -4,6 +4,7 @@ import com.sky.constant.JwtClaimsConstant;
 import com.sky.dto.EmployeeDTO;
 import com.sky.dto.EmployeeLoginDTO;
 import com.sky.dto.EmployeePageQueryDTO;
+import com.sky.dto.PasswordEditDTO;
 import com.sky.entity.Employee;
 import com.sky.properties.JwtProperties;
 import com.sky.result.PageResult;
@@ -147,6 +148,26 @@ public class EmployeeController {
     public Result<String> update(@RequestBody EmployeeDTO employeeDTO) {
         log.info("编辑员工：{}", employeeDTO);
         employeeService.update(employeeDTO);
+        return Result.success();
+    }
+
+    /**
+     * 修改密钥
+     *
+     * @param emdId       要修改密钥y员工的密钥
+     * @param newPassword 新密码
+     * @param oldPassword 就密码
+     * @return 返回响应数据
+     */
+    @ApiOperation("修改密钥")
+    @PutMapping("/editPassword")
+    public Result<String> editPassword(@RequestBody PasswordEditDTO p) {
+        log.info("要修改密码的用户:{}, 新密码:{},旧密码:{}",p.getEmpId(),p.getNewPassword(), p.getOldPassword());
+        // 判断两个密码是否相同
+        if (p.getOldPassword().equals(p.getNewPassword())) {
+            return Result.error("重置的密码与原密码相同");
+        }
+        employeeService.editPassword(p);
         return Result.success();
     }
 }
