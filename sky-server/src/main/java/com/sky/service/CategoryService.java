@@ -3,7 +3,10 @@ package com.sky.service;
 
 import com.sky.dto.CategoryDTO;
 import com.sky.dto.CategoryPageQueryDTO;
+import com.sky.entity.Category;
 import com.sky.result.PageResult;
+
+import java.util.List;
 
 /**
  * 分类接口
@@ -26,4 +29,12 @@ public interface CategoryService {
      * @return 返回查询结果
      */
     PageResult pageQuery(CategoryPageQueryDTO categoryPageQueryDTO);
+
+    /**
+     * 根据分类查询
+     *
+     * @param type 分类查询参数
+     * @return 返回查询结果
+     */
+    List<Category> listQuery(String type);
 }
