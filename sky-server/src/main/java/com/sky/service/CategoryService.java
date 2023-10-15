@@ -44,4 +44,12 @@ public interface CategoryService {
      * @param categoryDTO 修改分类的信息
      */
     void update(CategoryDTO categoryDTO);
+
+    /**
+     * 启动或者停止分类
+     *
+     * @param id 分类Id
+     * @param status 分类参数
+     */
+    void startOrStop(Long id, String status);
 }

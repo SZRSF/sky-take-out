@@ -104,4 +104,25 @@ public class CategoryServiceImpl implements CategoryService {
         // 4.去数据库更新数据
         categoryMapper.update(category);
     }
+
+    /**
+     * 修改分类状态
+     *
+     * @param id 分类Id
+     * @param status 分类参数
+     */
+    @Override
+    public void startOrStop(Long id, String status) {
+        // 1.创建分类对象
+        // 2.将id和状态设置进去
+        // 3.设置更新时间和更新人
+        Category category = Category.builder()
+                .id(id)
+                .status(Integer.valueOf(status))
+                .updateTime(LocalDateTime.now())
+                .updateUser(BaseContext.getCurrentId())
+                .build();
+        // 4.调用mapper层方法去数据库更新数据
+        categoryMapper.update(category);
+    }
 }
