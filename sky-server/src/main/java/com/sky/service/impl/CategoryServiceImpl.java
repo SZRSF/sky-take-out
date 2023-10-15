@@ -125,4 +125,14 @@ public class CategoryServiceImpl implements CategoryService {
         // 4.调用mapper层方法去数据库更新数据
         categoryMapper.update(category);
     }
+
+    /**
+     * 根据id删除分类
+     *
+     * @param id 分类id
+     */
+    @Override
+    public void delete(String id) {
+        categoryMapper.delete(id);
+    }
 }

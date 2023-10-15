@@ -52,4 +52,10 @@ public interface CategoryService {
      * @param status 分类参数
      */
     void startOrStop(Long id, String status);
+
+    /**
+     * 根据id删除分类
+     * @param id 分类id
+     */
+    void delete(String id);
 }

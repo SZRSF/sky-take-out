@@ -43,4 +43,11 @@ public interface CategoryMapper {
      * @param category 分类参数
      */
     void update(Category category);
+
+    /**
+     * 根据id删除分类
+     *
+     * @param id 分类id
+     */
+    void delete(String id);
 }
