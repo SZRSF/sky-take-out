@@ -36,4 +36,11 @@ public interface CategoryMapper {
      * @return 返回查询结果
      */
     List<Category> listQuery(String type);
+
+    /**
+     * 修改分类
+     *
+     * @param category 分类参数
+     */
+    void update(Category category);
 }

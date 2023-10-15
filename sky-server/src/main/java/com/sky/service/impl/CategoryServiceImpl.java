@@ -10,6 +10,7 @@ import com.sky.mapper.CategoryMapper;
 import com.sky.result.PageResult;
 import com.sky.service.CategoryService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.formula.functions.BaseNumberUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -84,5 +85,23 @@ public class CategoryServiceImpl implements CategoryService {
     public List<Category> listQuery(String type) {
         // 返回查询结果
         return categoryMapper.listQuery(type);
+    }
+
+    /**
+     * 修改分类
+     *
+     * @param categoryDTO 修改分类的信息
+     */
+    @Override
+    public void update(CategoryDTO categoryDTO) {
+        // 1.创建分类对象
+        Category category = new Category();
+        // 2.复制分类对象
+        BeanUtils.copyProperties(categoryDTO, category);
+        // 3.设置更新时间和更新人
+        category.setUpdateTime(LocalDateTime.now());
+        category.setUpdateUser(BaseContext.getCurrentId());
+        // 4.去数据库更新数据
+        categoryMapper.update(category);
     }
 }

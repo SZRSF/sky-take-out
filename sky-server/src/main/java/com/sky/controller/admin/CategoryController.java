@@ -69,4 +69,18 @@ public class CategoryController {
        List<Category> list = categoryService.listQuery(type);
         return Result.success(list);
     }
+
+    /**
+     * 修改分类
+     *
+     * @param categoryDTO 修改分类的信息
+     * @return 返回响应结果
+     */
+    @ApiOperation("修改分类")
+    @PutMapping
+    public Result<String> update(@RequestBody CategoryDTO categoryDTO) {
+        log.info("修改分类：{}", categoryDTO);
+        categoryService.update(categoryDTO);
+        return Result.success();
+    }
 }

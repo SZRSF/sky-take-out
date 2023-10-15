@@ -37,4 +37,11 @@ public interface CategoryService {
      * @return 返回查询结果
      */
     List<Category> listQuery(String type);
+
+    /**
+     * 修改分类
+     *
+     * @param categoryDTO 修改分类的信息
+     */
+    void update(CategoryDTO categoryDTO);
 }
