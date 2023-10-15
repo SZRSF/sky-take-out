@@ -1,16 +1,21 @@
 package com.sky.service.impl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.sky.constant.MessageConstant;
 import com.sky.constant.PasswordConstant;
 import com.sky.constant.StatusConstant;
 import com.sky.context.BaseContext;
 import com.sky.dto.EmployeeDTO;
 import com.sky.dto.EmployeeLoginDTO;
+import com.sky.dto.EmployeePageQueryDTO;
+import com.sky.dto.PasswordEditDTO;
 import com.sky.entity.Employee;
 import com.sky.exception.AccountLockedException;
 import com.sky.exception.AccountNotFoundException;
 import com.sky.exception.PasswordErrorException;
 import com.sky.mapper.EmployeeMapper;
+import com.sky.result.PageResult;
 import com.sky.service.EmployeeService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,8 +54,8 @@ public class EmployeeServiceImpl implements EmployeeService {
             throw new AccountNotFoundException(MessageConstant.ACCOUNT_NOT_FOUND);
         }
 
-        //密码比对
-        // TODO 后期需要进行md5加密，然后再进行比对
+        // 密码比对,md5加密，然后再进行比对
+        password = DigestUtils.md5DigestAsHex(password.getBytes());
         if (!password.equals(employee.getPassword())) {
             //密码错误
             throw new PasswordErrorException(MessageConstant.PASSWORD_ERROR);
@@ -89,6 +94,85 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         employeeMapper.insert(employee);
 
+    }
+
+    /**
+     * 员工分页查询业务实现
+     *
+     * @param pageQueryDTO 分页查询参数
+     * @return 返回分页查询结果
+     */
+    @Override
+    public PageResult pageQuery(EmployeePageQueryDTO pageQueryDTO) {
+        // 基于pageHelper插件实现动态分页查询
+        PageHelper.startPage(pageQueryDTO.getPage(), pageQueryDTO.getPageSize());
+        Page<Employee> page = employeeMapper.pageQuery(pageQueryDTO);
+        return new PageResult(page.getTotal(), page.getResult());
+    }
+
+    /**
+     * 启用禁用员工账号
+     *
+     * @param status 状态，1为启用 0为禁用
+     * @param id     员工id
+     */
+    @Override
+    public void startOrStop(Integer status, Long id) {
+        Employee employee = Employee.builder()
+                .status(status)
+                .id(id)
+                .build();
+
+        employeeMapper.update(employee);
+    }
+
+    /**
+     * 根据Id查询员工实现类
+     *
+     * @param id 员工id
+     * @return 返回查询的结果
+     */
+    @Override
+    public Employee getById(Long id) {
+        return employeeMapper.getById(id);
+    }
+
+    /**
+     * 编辑员工数据是实现类
+     *
+     * @param employeeDTO 要跟更新的员工数据
+     */
+    @Override
+    public void update(EmployeeDTO employeeDTO) {
+        Employee employee = new Employee();
+        BeanUtils.copyProperties(employeeDTO, employee);
+
+        // 设置修改人和修改时间
+        employee.setUpdateUser(BaseContext.getCurrentId());
+        employee.setUpdateTime(LocalDateTime.now());
+
+        employeeMapper.update(employee);
+    }
+
+    /**
+     * 修改密钥
+     *
+     * @param emdId       要修改密钥y员工的密钥
+     * @param newPassword 新密码
+     * @param oldPassword 就密码
+     */
+    @Override
+    public void editPassword(PasswordEditDTO passwordEditDTO) {
+        Employee employee = new Employee();
+        employee.setId(passwordEditDTO.getEmpId());
+        employee.setPassword(DigestUtils.md5DigestAsHex(passwordEditDTO.getNewPassword().getBytes()));
+
+        // 更新人和时间
+        employee.setUpdateUser(BaseContext.getCurrentId());
+        employee.setUpdateTime(LocalDateTime.now());
+
+        // 更新密码
+        employeeMapper.update(employee);
     }
 
 }
