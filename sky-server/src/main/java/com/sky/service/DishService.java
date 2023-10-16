@@ -51,4 +51,12 @@ public interface DishService {
      * @param ids 菜品Id
      */
     void delete(List<Long> ids);
+
+    /**
+     * 菜品起售、停止状态
+     *
+     * @param id 菜品id
+     * @param status 菜品更改后的状态
+     */
+    void startOrStop(Long id, Integer status);
 }

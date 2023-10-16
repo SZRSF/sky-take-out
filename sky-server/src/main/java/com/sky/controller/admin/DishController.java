@@ -87,6 +87,20 @@ public class DishController {
     }
 
     /**
+     * 菜品起售、停售状态修改
+     *
+     * @param status 修改的状态
+     * @return 返回响应
+     */
+    @ApiOperation("菜品起售、停售更改")
+    @PostMapping("/status/{status}")
+    public Result<String> startOrStop(@RequestParam(value = "id") Long id,@PathVariable Integer status) {
+        log.info("菜品：{}的状态改为:{}", id, status);
+        dishService.startOrStop(id, status);
+        return Result.success();
+    }
+
+    /**
      * 批量删除菜品
      *
      * @param ids 要删除的Id

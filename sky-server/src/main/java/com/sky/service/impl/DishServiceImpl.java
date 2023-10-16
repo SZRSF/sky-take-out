@@ -175,4 +175,19 @@ public class DishServiceImpl implements DishService {
             dishFlavorMapper.deleteByDishId(id);
         }
     }
+
+    /**
+     * 菜品起售、停售状态的修改
+     *
+     * @param id 菜品id
+     * @param status 菜品更改后的状态
+     */
+    @Override
+    public void startOrStop(Long id, Integer status) {
+        Dish dish = Dish.builder()
+                .id(id)
+                .status(status)
+                .build();
+        dishMapper.update(dish);
+    }
 }
