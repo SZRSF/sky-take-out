@@ -76,7 +76,6 @@ public class AutoFillAspect {
                 setUpdateUser.invoke(entity, currentId);
             }  catch (Exception e) {
                 log.error("对4个公共字段赋值错误:" + e);
-                e.printStackTrace();
             }
         } else if (operationType == OperationType.UPDATE) {
             try {
@@ -89,7 +88,6 @@ public class AutoFillAspect {
                 setUpdateUser.invoke(entity, currentId);
             }  catch (Exception e) {
                 log.error("对2个公共字段赋值错误:" + e);
-                e.printStackTrace();
             }
         }
     }
