@@ -25,6 +25,11 @@
         where id = #{id};
     </update>
 
+    <!--删除指定id的菜品-->
+    <delete id="deleteById">
+        delete from dish where id = #{id}
+    </delete>
+
     <!--分页查询菜品数据-->
     <select id="pageQuery" resultType="com.sky.vo.DishVO">
         select d.*, c.name as categoryName

@@ -38,7 +38,7 @@ public interface DishMapper {
      * @param id 菜品Id
      * @return 返回查询的菜品
      */
-    Dish getById(String id);
+    Dish getById(Long id);
 
     /**
      * 更新菜品
@@ -47,4 +47,11 @@ public interface DishMapper {
      */
     @AutoFill(value = OperationType.UPDATE)
     void update(Dish dish);
+
+    /**
+     * 删除菜品
+     *
+     * @param id 要删除的菜品id
+     */
+    void deleteById(Long id);
 }

@@ -27,7 +27,7 @@ public interface DishFlavorMapper {
      * @param id 要查找菜品的Id
      * @return 返回查询的结果
      */
-    List<DishFlavor> getByDishId(String id);
+    List<DishFlavor> getByDishId(Long id);
 
     /**
      * 删掉菜品的口味

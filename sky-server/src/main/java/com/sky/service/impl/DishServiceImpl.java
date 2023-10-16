@@ -2,12 +2,16 @@ package com.sky.service.impl;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.sky.constant.MessageConstant;
+import com.sky.constant.StatusConstant;
 import com.sky.dto.DishDTO;
 import com.sky.dto.DishPageQueryDTO;
 import com.sky.entity.Dish;
 import com.sky.entity.DishFlavor;
+import com.sky.exception.DeletionNotAllowedException;
 import com.sky.mapper.DishFlavorMapper;
 import com.sky.mapper.DishMapper;
+import com.sky.mapper.SetmealDishMapper;
 import com.sky.result.PageResult;
 import com.sky.service.DishService;
 import com.sky.vo.DishVO;
@@ -34,6 +38,9 @@ public class DishServiceImpl implements DishService {
     @Autowired
     private DishFlavorMapper dishFlavorMapper;
 
+    @Autowired
+    private SetmealDishMapper setmealDishMapper;
+
     /**
      * 新增菜品
      *
@@ -56,7 +63,7 @@ public class DishServiceImpl implements DishService {
         // 4.2获取前端传来的口味列表
         List<DishFlavor> flavors = dishDTO.getFlavors();
         // 4.3判断口味列表是否为空,
-        if (flavors != null && flavors .size()> 0) {
+        if (flavors != null && flavors.size() > 0) {
             flavors.forEach(dishFlavor -> {
                 dishFlavor.setDishId(dishId);
             });
@@ -90,7 +97,7 @@ public class DishServiceImpl implements DishService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public DishVO getById(String id) {
+    public DishVO getById(Long id) {
         // 1.根据id查询菜品
         Dish dish = dishMapper.getById(id);
 
@@ -125,7 +132,7 @@ public class DishServiceImpl implements DishService {
         // 4.获取菜品需要的口味
         List<DishFlavor> dishFlavors = dishDTO.getFlavors();
         // 4.更新口味
-        if (dishFlavors  != null && dishFlavors.size() > 0) {
+        if (dishFlavors != null && dishFlavors.size() > 0) {
             dishFlavors.forEach(dishFlavor -> {
                 dishFlavor.setDishId(dishDTO.getId());
             });
@@ -133,5 +140,39 @@ public class DishServiceImpl implements DishService {
             dishFlavorMapper.insertBatch(dishFlavors);
         }
 
+    }
+
+    /**
+     * 批量删除菜品
+     *
+     * @param ids 菜品Id
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void delete(List<Long> ids) {
+        // 1.判断当前菜品是否能够删除
+        // 1.1是否存在起售中的菜品
+        for (Long id : ids) {
+            Dish dish = dishMapper.getById(id);
+            if (dish.getStatus().equals(StatusConstant.ENABLE)) {
+                // 当前菜品处于起售中，不能删除
+                throw new DeletionNotAllowedException(MessageConstant.DISH_ON_SALE);
+            }
+        }
+
+        // 1.2是否被套餐关联
+        List<Long> setmealIds = setmealDishMapper.getSetmealIdsByDishId(ids);
+        if (setmealIds != null && setmealIds.size() > 0) {
+            // 当前菜品被套餐关联了
+            throw new DeletionNotAllowedException(MessageConstant.DISH_BE_RELATED_BY_SETMEAL);
+        }
+
+        // 2.删除菜品
+        for (Long id : ids) {
+            // 2.1 删除菜品表里的数据
+            dishMapper.deleteById(id);
+            //2.2 删除与菜品相关的口味
+            dishFlavorMapper.deleteByDishId(id);
+        }
     }
 }
