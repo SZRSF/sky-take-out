@@ -20,4 +20,12 @@ public interface DishFlavorMapper {
      * @param flavors 多条口味列表
      */
     void insertBatch(List<DishFlavor> flavors);
+
+    /**
+     * 根据菜品Id查找口味
+     *
+     * @param id 要查找菜品的Id
+     * @return 返回查询的结果
+     */
+    List<DishFlavor> getByDishId(String id);
 }

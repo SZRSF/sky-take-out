@@ -21,4 +21,9 @@
             <if test="status != null">and d.status = #{status}</if>
         </where>
     </select>
+
+    <!--根据Id查询菜品-->
+    <select id="getById" resultType="com.sky.entity.Dish">
+        select * from dish where id = #{id}
+    </select>
 </mapper>

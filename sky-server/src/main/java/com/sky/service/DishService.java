@@ -4,6 +4,7 @@ package com.sky.service;
 import com.sky.dto.DishDTO;
 import com.sky.dto.DishPageQueryDTO;
 import com.sky.result.PageResult;
+import com.sky.vo.DishVO;
 
 /**
  * 菜品模块业务实现接口
@@ -26,4 +27,12 @@ public interface DishService {
      * @return 分页查询结果
      */
     PageResult pageQuery(DishPageQueryDTO dishPageQueryDTO);
+
+    /**
+     * 根据Id查询菜品
+     *
+     * @param id 要查寻菜品的id
+     * @return 返回查询的结果
+     */
+    DishVO getById(String id);
 }

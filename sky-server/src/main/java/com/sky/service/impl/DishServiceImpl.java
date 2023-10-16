@@ -81,4 +81,26 @@ public class DishServiceImpl implements DishService {
         // 3.返回查询结果
         return new PageResult(page.getTotal(), page.getResult());
     }
+
+    /**
+     * 根据id查询菜品
+     *
+     * @param id 要查寻菜品的id
+     * @return 返回查询的结果
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public DishVO getById(String id) {
+        // 1.根据id查询菜品
+        Dish dish = dishMapper.getById(id);
+
+        // 2.根据菜品id查询口味
+        List<DishFlavor> dishFlavors = dishFlavorMapper.getByDishId(id);
+
+        // 3.拼接返回数据
+        DishVO dishVO = new DishVO();
+        BeanUtils.copyProperties(dish, dishVO);
+        dishVO.setFlavors(dishFlavors);
+        return dishVO;
+    }
 }

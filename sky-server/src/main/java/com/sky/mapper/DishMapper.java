@@ -31,4 +31,12 @@ public interface DishMapper {
      * @return 返回查询结果
      */
     Page<DishVO> pageQuery(DishPageQueryDTO dishPageQueryDTO);
+
+    /**
+     * 根据id查询菜品
+     *
+     * @param id 菜品Id
+     * @return 返回查询的菜品
+     */
+    Dish getById(String id);
 }
