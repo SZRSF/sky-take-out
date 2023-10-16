@@ -11,6 +11,20 @@
                 #{createTime}, #{updateTime}, #{createUser}, #{updateUser})
     </insert>
 
+    <!--更新菜品-->
+    <update id="update">
+        update dish
+        <set>
+            <if test=" name != null ">name = #{name},</if>
+            <if test=" price != null ">price = #{price},</if>
+            <if test=" image != null ">image = #{image},</if>
+            <if test=" status != null ">status = #{status},</if>
+            <if test=" categoryId != null ">category_id = #{categoryId},</if>
+            <if test=" description != null ">description = #{description}</if>
+        </set>
+        where id = #{id};
+    </update>
+
     <!--分页查询菜品数据-->
     <select id="pageQuery" resultType="com.sky.vo.DishVO">
         select d.*, c.name as categoryName
@@ -24,6 +38,8 @@
 
     <!--根据Id查询菜品-->
     <select id="getById" resultType="com.sky.entity.Dish">
-        select * from dish where id = #{id}
+        select *
+        from dish
+        where id = #{id}
     </select>
 </mapper>

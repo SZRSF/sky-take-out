@@ -39,4 +39,12 @@ public interface DishMapper {
      * @return 返回查询的菜品
      */
     Dish getById(String id);
+
+    /**
+     * 更新菜品
+     *
+     * @param dish 更新的菜品数据
+     */
+    @AutoFill(value = OperationType.UPDATE)
+    void update(Dish dish);
 }

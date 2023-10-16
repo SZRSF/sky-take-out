@@ -35,4 +35,11 @@ public interface DishService {
      * @return 返回查询的结果
      */
     DishVO getById(String id);
+
+    /**
+     * 修改菜品
+     *
+     * @param dishDTO 菜品的新增数据
+     */
+    void update(DishDTO dishDTO);
 }
