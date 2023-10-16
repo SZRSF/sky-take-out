@@ -59,4 +59,12 @@ public interface DishService {
      * @param status 菜品更改后的状态
      */
     void startOrStop(Long id, Integer status);
+
+    /**
+     * 根据分类id查询菜品
+     *
+     * @param categoryId 分类Id
+     * @return 返回菜品信息
+     */
+    List<DishVO> getByCategoryId(Long categoryId);
 }

@@ -8,6 +8,8 @@ import com.sky.enumeration.OperationType;
 import com.sky.vo.DishVO;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 /**
  * 菜品表数据库
  *
@@ -54,4 +56,12 @@ public interface DishMapper {
      * @param id 要删除的菜品id
      */
     void deleteById(Long id);
+
+    /**
+     * 根据分类id查询菜品
+     *
+     * @param categoryId 分类id
+     * @return 返回查询的结果
+     */
+    List<DishVO> getByCategoryId(Long categoryId);
 }

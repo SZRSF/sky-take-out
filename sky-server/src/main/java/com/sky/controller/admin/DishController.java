@@ -73,6 +73,20 @@ public class DishController {
     }
 
     /**
+     * 根据分类id查询菜品
+     *
+     * @param categoryId 分类id
+     * @return 返回查询的菜品信息
+     */
+    @ApiOperation("根据分类id查询菜品")
+    @GetMapping("/list")
+    public Result<List<DishVO>> getByCategoryId(Long categoryId) {
+        log.info("根据分类id查询菜品: {}", categoryId);
+        List<DishVO> list = dishService.getByCategoryId(categoryId);
+        return Result.success(list);
+    }
+
+    /**
      * 修改菜品
      *
      * @param dishDTO 菜品的新数据
