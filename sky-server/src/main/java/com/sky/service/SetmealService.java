@@ -41,4 +41,12 @@ public interface SetmealService {
      * @param setmealVO 修改的套餐数据
      */
     void update(SetmealVO setmealVO);
+
+    /**
+     * 套餐起售、停售
+     *
+     * @param id 套餐Id
+     * @param status 套餐状态
+     */
+    void startOrStop(Long id, Integer status);
 }
