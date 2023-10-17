@@ -5,6 +5,8 @@ import com.sky.dto.SetmealPageQueryDTO;
 import com.sky.result.PageResult;
 import com.sky.vo.SetmealVO;
 
+import java.util.List;
+
 /**
  * 套餐业务接口
  *
@@ -49,4 +51,11 @@ public interface SetmealService {
      * @param status 套餐状态
      */
     void startOrStop(Long id, Integer status);
+
+    /**
+     * 批量删除套餐
+     *
+     * @param ids 套餐id
+     */
+    void deleteBatch(List<Long> ids);
 }

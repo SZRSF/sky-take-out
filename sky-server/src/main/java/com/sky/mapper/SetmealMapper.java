@@ -7,6 +7,8 @@ import com.sky.entity.Setmeal;
 import com.sky.enumeration.OperationType;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 /**
  * 套餐表操作
  *
@@ -45,4 +47,11 @@ public interface SetmealMapper {
      * @param setmeal 更新的套餐数据
      */
     void update(Setmeal setmeal);
+
+    /**
+     * 批量删除套餐
+     *
+     * @param ids 套餐id
+     */
+    void deleteBatch(List<Long> ids);
 }
