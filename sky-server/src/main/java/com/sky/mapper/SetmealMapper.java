@@ -26,8 +26,16 @@ public interface SetmealMapper {
     /**
      * 套餐分页查询
      *
-     * param setmealPageQueryDTO 套餐分页查询参数
+     * @param setmealPageQueryDTO 套餐分页查询参数
      * @return 返回分页查询结果
      */
     Page<Setmeal> pageQuery(SetmealPageQueryDTO setmealPageQueryDTO);
+
+    /**
+     * 根据id找套餐
+     *
+     * @param id 套餐Id
+     * @return 返回查询结果
+     */
+    Setmeal getById(Long id);
 }

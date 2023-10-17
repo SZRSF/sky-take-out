@@ -3,6 +3,7 @@ package com.sky.service;
 import com.sky.dto.SetmealDTO;
 import com.sky.dto.SetmealPageQueryDTO;
 import com.sky.result.PageResult;
+import com.sky.vo.SetmealVO;
 
 /**
  * 套餐业务接口
@@ -25,4 +26,12 @@ public interface SetmealService {
      * @return 返回分页查询结果
      */
     PageResult pageQuery(SetmealPageQueryDTO setmealPageQueryDTO);
+
+    /**
+     * 根据套餐Id查询
+     *
+     * @param id 套餐id
+     * @return 返回查询结果
+     */
+    SetmealVO getById(Long id);
 }

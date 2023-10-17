@@ -20,4 +20,9 @@
             <if test="status != null "> and status = #{status} </if>
         </where>
     </select>
+
+    <!--根据id查询套餐-->
+    <select id="getById" resultType="com.sky.entity.Setmeal">
+        select * from setmeal where id = #{id}
+    </select>
 </mapper>
