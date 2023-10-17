@@ -34,4 +34,11 @@ public interface SetmealService {
      * @return 返回查询结果
      */
     SetmealVO getById(Long id);
+
+    /**
+     * 修改套餐
+     *
+     * @param setmealVO 修改的套餐数据
+     */
+    void update(SetmealVO setmealVO);
 }

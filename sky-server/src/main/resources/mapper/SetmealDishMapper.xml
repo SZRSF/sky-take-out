@@ -11,6 +11,11 @@
         </foreach>
     </insert>
 
+    <!--根据套餐Id删除关联菜品-->
+    <delete id="delete">
+        delete from setmeal_dish where setmeal_id = #{setmealId};
+    </delete>
+
     <!-- 根据菜品Id查询套餐-->
     <select id="getSetmealIdsByDishId" resultType="java.lang.Long">
         select setmeal_id from setmeal_dish where dish_id in

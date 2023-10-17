@@ -38,4 +38,11 @@ public interface SetmealMapper {
      * @return 返回查询结果
      */
     Setmeal getById(Long id);
+
+    /**
+     * 更新套餐
+     *
+     * @param setmeal 更新的套餐数据
+     */
+    void update(Setmeal setmeal);
 }
