@@ -5,9 +5,9 @@
 
     <!-- 新增套餐-->
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
-        insert into setmeal (category_id, name, price, description, image,
+        insert into setmeal (category_id, name, price, description, image,status,
                              create_time, update_time, create_user, update_user)
-        VALUES (#{categoryId}, #{name}, #{price}, #{description}, #{image},
+        VALUES (#{categoryId}, #{name}, #{price}, #{description}, #{image},#{status},
                 #{createTime}, #{updateTime}, #{createUser}, #{updateUser})
     </insert>
 
