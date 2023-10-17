@@ -7,6 +7,7 @@ import java.util.List;
 
 /**
  * 菜品套餐关联表
+ *
  * @author zengzhicheng
  */
 @Mapper
@@ -30,6 +31,7 @@ public interface SetmealDishMapper {
 
     /**
      * 根据套餐id查询关联的菜品
+     *
      * @param id 套餐Id
      * @return 返回结果
      */

@@ -9,6 +9,8 @@ import com.sky.dto.SetmealPageQueryDTO;
 import com.sky.entity.Setmeal;
 import com.sky.entity.SetmealDish;
 import com.sky.exception.DeletionNotAllowedException;
+import com.sky.exception.SetmealEnableFailedException;
+import com.sky.mapper.DishMapper;
 import com.sky.mapper.SetmealDishMapper;
 import com.sky.mapper.SetmealMapper;
 import com.sky.result.PageResult;
@@ -36,6 +38,9 @@ public class SetmealServiceImpl implements SetmealService {
 
     @Autowired
     private SetmealDishMapper setmealDishMapper;
+
+    @Autowired
+    private DishMapper dishMapper;
 
     /**
      * 新增套餐业务实现
@@ -80,7 +85,7 @@ public class SetmealServiceImpl implements SetmealService {
         // 1.设置分页参数
         PageHelper.startPage(setmealPageQueryDTO.getPage(), setmealPageQueryDTO.getPageSize());
         // 2.进行分页查询
-        Page<Setmeal> page = setmealMapper.pageQuery(setmealPageQueryDTO);
+        Page<SetmealVO> page = setmealMapper.pageQuery(setmealPageQueryDTO);
 
         // 3.返回查询结果
         return new PageResult(page.getTotal(), page.getResult());
@@ -152,6 +157,16 @@ public class SetmealServiceImpl implements SetmealService {
                 .id(id)
                 .status(status)
                 .build();
+
+        if (status.equals(StatusConstant.DISABLE)) {
+            // 判断该套餐内是否有套餐未上架
+            List<SetmealDish> dishIds = setmealDishMapper.getByDishId(id);
+            for (SetmealDish dishId : dishIds) {
+                if (dishMapper.getById(dishId.getDishId()).getStatus().equals(StatusConstant.ENABLE)) {
+                    throw new SetmealEnableFailedException(MessageConstant.SETMEAL_ENABLE_FAILED);
+                }
+            }
+        }
         setmealMapper.update(setmeal);
     }
 
