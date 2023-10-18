@@ -63,5 +63,5 @@ public interface DishMapper {
      * @param categoryId 分类id
      * @return 返回查询的结果
      */
-    List<DishVO> getByCategoryId(Long categoryId);
+    List<DishVO> getByCategoryId(Long categoryId, String name);
 }

@@ -198,8 +198,8 @@ public class DishServiceImpl implements DishService {
      * @return 返回查询结果
      */
     @Override
-    public List<DishVO> getByCategoryId(Long categoryId) {
+    public List<DishVO> getByCategoryId(Long categoryId, String name) {
         // 1.根据分类Id查询菜品
-        return dishMapper.getByCategoryId(categoryId);
+        return dishMapper.getByCategoryId(categoryId, name);
     }
 }
