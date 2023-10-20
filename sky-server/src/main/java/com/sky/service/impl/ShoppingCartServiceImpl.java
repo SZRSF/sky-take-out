@@ -50,7 +50,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         // 判断当前商品是否在购物车
         List<ShoppingCart> shoppingCartList = shoppingCartMapper.list(shoppingCart);
 
-        if (shoppingCartList != null && shoppingCartList.size() == 1 ) {
+        if (shoppingCartList != null && shoppingCartList.size() == 1) {
             // 如果已经存在，就更新数量，数量加1
             shoppingCart = shoppingCartList.get(0);
             shoppingCart.setNumber(shoppingCart.getNumber() + 1);
@@ -77,5 +77,15 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
             shoppingCart.setCreateTime(LocalDateTime.now());
             shoppingCartMapper.insert(shoppingCart);
         }
+    }
+
+    /**
+     * 查看购物车业务实现类
+     *
+     * @return 返回查询结果
+     */
+    @Override
+    public List<ShoppingCart> showShoppingCart() {
+        return shoppingCartMapper.list(ShoppingCart.builder().userId(BaseContext.getCurrentId()).build());
     }
 }
