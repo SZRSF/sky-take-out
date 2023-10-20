@@ -36,7 +36,7 @@ public interface CategoryService {
      * @param type 分类查询参数
      * @return 返回查询结果
      */
-    List<Category> listQuery(String type);
+    List<Category> listQuery(Integer type);
 
     /**
      * 修改分类

@@ -10,7 +10,6 @@ import com.sky.mapper.CategoryMapper;
 import com.sky.result.PageResult;
 import com.sky.service.CategoryService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.ss.formula.functions.BaseNumberUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -82,7 +81,7 @@ public class CategoryServiceImpl implements CategoryService {
      * @return 返回分页查询结果
      */
     @Override
-    public List<Category> listQuery(String type) {
+    public List<Category> listQuery(Integer type) {
         // 返回查询结果
         return categoryMapper.listQuery(type);
     }

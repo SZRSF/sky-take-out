@@ -56,4 +56,15 @@
             <if test="name != null"> name like concat('%', #{name}, '%')</if>
         </where>
     </select>
+
+    <!--条件查询菜品和口味-->
+    <select id="list" resultType="com.sky.entity.Dish">
+        select d.*, c.name as categoryName
+        from dish d left join category c on d.category_id = c.id
+        <where>
+            <if test="name != null">and d.name like concat('%', #{name}, '%')</if>
+            <if test="categoryId != null">and d.category_id = #{categoryId}</if>
+            <if test="status != null">and d.status = #{status}</if>
+        </where>
+    </select>
 </mapper>
