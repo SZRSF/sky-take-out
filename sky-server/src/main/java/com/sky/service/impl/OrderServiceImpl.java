@@ -4,10 +4,7 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.sky.constant.MessageConstant;
 import com.sky.context.BaseContext;
-import com.sky.dto.OrdersConfirmDTO;
-import com.sky.dto.OrdersPageQueryDTO;
-import com.sky.dto.OrdersPaymentDTO;
-import com.sky.dto.OrdersSubmitDTO;
+import com.sky.dto.*;
 import com.sky.entity.AddressBook;
 import com.sky.entity.OrderDetail;
 import com.sky.entity.Orders;
@@ -373,6 +370,35 @@ public class OrderServiceImpl implements OrderService {
     }
 
     /**
+     * 拒单
+     *
+     * @param ordersRejectionDTO 拒绝订单信息
+     */
+    @Override
+    public void rejection(OrdersRejectionDTO ordersRejectionDTO) {
+        // 1.根据id查询订单
+        Orders ordersDb = orderMapper.getById(ordersRejectionDTO.getId());
+
+        // 2.待接单状态才可以拒单
+        if (ordersDb == null || !ordersDb.getStatus().equals(Orders.TO_BE_CONFIRMED)) {
+            throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
+        }
+
+        // 3.获取支付状态
+        Integer payStatus = ordersDb.getPayStatus();
+
+        // 4.更新订单状态、拒单原因、取消时间
+        Orders orders = new Orders();
+        orders.setId(ordersDb.getId());
+        orders.setStatus(Orders.CANCELLED);
+        orders.setRejectionReason(ordersRejectionDTO.getRejectionReason());
+        orders.setCancelTime(LocalDateTime.now());
+
+        // 5.去数据库更新数据
+        orderMapper.update(orders);
+    }
+
+    /**
      * 将Orders转化为OrderVO
      */
     private List<OrderVO> getOrderVOList(Page<Orders> page) {
@@ -413,5 +439,5 @@ public class OrderServiceImpl implements OrderService {
         // 3.将该订单对应的所有菜品信息拼接在一起
         return String.join("", orderDishList);
     }
-    
+
 }
