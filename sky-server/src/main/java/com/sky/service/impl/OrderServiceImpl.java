@@ -4,6 +4,7 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.sky.constant.MessageConstant;
 import com.sky.context.BaseContext;
+import com.sky.dto.OrdersConfirmDTO;
 import com.sky.dto.OrdersPageQueryDTO;
 import com.sky.dto.OrdersPaymentDTO;
 import com.sky.dto.OrdersSubmitDTO;
@@ -355,6 +356,23 @@ public class OrderServiceImpl implements OrderService {
     }
 
     /**
+     * 接单
+     *
+     * @param ordersConfirmDTO 接单信息
+     */
+    @Override
+    public void confirm(OrdersConfirmDTO ordersConfirmDTO) {
+        // 1.构建订单数据
+        Orders orders = Orders.builder()
+                .id(ordersConfirmDTO.getId())
+                .status(Orders.CONFIRMED)
+                .build();
+
+        // 2.更新订单状态
+        orderMapper.update(orders);
+    }
+
+    /**
      * 将Orders转化为OrderVO
      */
     private List<OrderVO> getOrderVOList(Page<Orders> page) {
@@ -395,4 +413,5 @@ public class OrderServiceImpl implements OrderService {
         // 3.将该订单对应的所有菜品信息拼接在一起
         return String.join("", orderDishList);
     }
+    
 }
