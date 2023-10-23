@@ -2,6 +2,7 @@ package com.sky.mapper;
 
 import com.sky.entity.User;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 
 /**
  * C端用户数据库操作
@@ -25,4 +26,13 @@ public interface UserMapper {
      * @param user 要插入的用户数据
      */
     void insert(User user);
+
+    /**
+     * 根据用户id查询用户信息
+     *
+     * @param userId 用户id
+     * @return 返回用户信息
+     */
+    @Select("select * from user where id = #{userId}")
+    User getById(Long userId);
 }
