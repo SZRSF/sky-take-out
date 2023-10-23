@@ -1,8 +1,10 @@
 package com.sky.controller.user;
 
 
+import com.sky.dto.OrdersPageQueryDTO;
 import com.sky.dto.OrdersPaymentDTO;
 import com.sky.dto.OrdersSubmitDTO;
+import com.sky.result.PageResult;
 import com.sky.result.Result;
 import com.sky.service.OrderService;
 import com.sky.vo.OrderPaymentVO;
@@ -54,5 +56,19 @@ public class OrderController {
         OrderPaymentVO orderPaymentVO = orderService.payment(ordersPaymentDTO);
         log.info("生成预支付交易单：{}", orderPaymentVO);
         return Result.success(orderPaymentVO);
+    }
+
+    /**
+     * 查询历史订单
+     *
+     * @param ordersPageQueryDTO 查看历史订单参数
+     * @return
+     */
+    @ApiOperation("查看历史订单")
+    @GetMapping("/historyOrders")
+    public Result<PageResult> historyPage(OrdersPageQueryDTO ordersPageQueryDTO) {
+        log.info("查看历史订单：{}", ordersPageQueryDTO);
+        PageResult pageResult = orderService.historyPage(ordersPageQueryDTO);
+        return Result.success(pageResult);
     }
 }
