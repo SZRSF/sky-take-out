@@ -65,7 +65,7 @@ public class OrderController {
     @ApiOperation("查询订单详情")
     @GetMapping("/details/{id}")
     public Result<OrderVO> details(@PathVariable Long id) {
-        log.info("查询订单详情：{}",id);
+        log.info("查询订单详情：{}", id);
         OrderVO orderVO = orderService.details(id);
         return Result.success(orderVO);
     }
@@ -121,8 +121,22 @@ public class OrderController {
     @ApiOperation("派送订单")
     @PutMapping("/delivery/{id}")
     public Result<String> delivery(@PathVariable Long id) {
-        log.info("派送订单：{}",id);
+        log.info("派送订单：{}", id);
         orderService.delivery(id);
+        return Result.success();
+    }
+
+    /**
+     * 完成订单
+     *
+     * @param id 订单id
+     * @return 返回响应
+     */
+    @ApiOperation("完成订单")
+    @PutMapping("/complete/{id}")
+    public Result<String> complete(@PathVariable Long id) {
+        log.info("完成订单：{}", id);
+        orderService.complete(id);
         return Result.success();
     }
 
