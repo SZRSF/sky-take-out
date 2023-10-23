@@ -96,4 +96,11 @@ public interface OrderService {
      * @param ordersRejectionDTO 拒绝订单信息
      */
     void rejection(OrdersRejectionDTO ordersRejectionDTO);
+
+    /**
+     * 取消订单
+     *
+     * @param ordersCancelDTO 取消订单信息
+     */
+    void cancel(OrdersCancelDTO ordersCancelDTO);
 }

@@ -384,18 +384,31 @@ public class OrderServiceImpl implements OrderService {
             throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
         }
 
-        // 3.获取支付状态
-        Integer payStatus = ordersDb.getPayStatus();
-
-        // 4.更新订单状态、拒单原因、取消时间
+        // 3.更新订单状态、拒单原因、取消时间
         Orders orders = new Orders();
         orders.setId(ordersDb.getId());
         orders.setStatus(Orders.CANCELLED);
         orders.setRejectionReason(ordersRejectionDTO.getRejectionReason());
         orders.setCancelTime(LocalDateTime.now());
 
-        // 5.去数据库更新数据
+        // 4.去数据库更新数据
         orderMapper.update(orders);
+    }
+
+    /**
+     * 取消订单
+     *
+     * @param ordersCancelDTO 取消订单信息
+     */
+    @Override
+    public void cancel(OrdersCancelDTO ordersCancelDTO) {
+            // 1.更新订单状态、取消原因、取消时间
+            Orders orders = new Orders();
+            orders.setId(ordersCancelDTO.getId());
+            orders.setStatus(Orders.CANCELLED);
+            orders.setCancelReason(ordersCancelDTO.getCancelReason());
+            orders.setCancelTime(LocalDateTime.now());
+            orderMapper.update(orders);
     }
 
     /**
