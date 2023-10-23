@@ -61,4 +61,11 @@ public interface OrderService {
      * @param id 订单id
      */
     void userCancelById(Long id);
+
+    /**
+     * 再来一单
+     *
+     * @param id 订单id
+     */
+    void repetition(Long id);
 }
