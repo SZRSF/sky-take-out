@@ -1,5 +1,8 @@
 package com.sky.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.sky.constant.MessageConstant;
@@ -15,6 +18,7 @@ import com.sky.exception.ShoppingCartBusinessException;
 import com.sky.mapper.*;
 import com.sky.result.PageResult;
 import com.sky.service.OrderService;
+import com.sky.utils.HttpClientUtil;
 import com.sky.utils.WeChatPayUtil;
 import com.sky.vo.OrderPaymentVO;
 import com.sky.vo.OrderStatisticsVO;
@@ -23,12 +27,12 @@ import com.sky.vo.OrderVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -58,6 +62,16 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private WeChatPayUtil weChatPayUtil;
 
+    @Value("${sky.shop.address}")
+    private String shopAddress;
+
+    @Value("${sky.baidu.ak}")
+    private String AK;
+
+    public static String URL = "https://api.map.baidu.com/geocoding/v3?";
+
+    public static String URL2 = "https://api.map.baidu.com/directionlite/v1/riding?";
+
     /**
      * 用户下单业务实现
      *
@@ -73,6 +87,9 @@ public class OrderServiceImpl implements OrderService {
         if (addressBook == null) {
             throw new AddressBookBusinessException(MessageConstant.ADDRESS_BOOK_IS_NULL);
         }
+
+        // 1.3判断地址是否超出配送距离
+        this.judgeOutRange(addressBook);
 
         // 2.判断当前用户购物车是否为空
         // 2.1获得当前用户的购物车数据
@@ -123,6 +140,87 @@ public class OrderServiceImpl implements OrderService {
                 .orderAmount(order.getAmount())
                 .orderTime(order.getOrderTime())
                 .build();
+    }
+
+    /**
+     * 判断配送地址是否超过配送距离
+     *
+     * @param addressBook 配送地址
+     */
+    private void judgeOutRange(AddressBook addressBook) {
+        // 1.获取店铺的经纬度
+        // 1.1封装向百度地图请求地理编码的数据
+        Map<String, String> params = new LinkedHashMap<>();
+        params.put("address", shopAddress);
+        params.put("output", "json");
+        params.put("ak", AK);
+
+        // 1.2向百度地图请求地理编码的数据
+        String shopCoding = HttpClientUtil.doGet(URL, params);
+        log.info("店铺的地理编码：{}", shopCoding);
+
+        // 1.3解析地理编码JSON格式为对象
+        JSONObject jsonObject = JSON.parseObject(shopCoding);
+        // 1.4判断解析地址是否为空
+        if (!"0".equals(jsonObject.getString("status"))) {
+            throw new OrderBusinessException(MessageConstant.ORDER_SHOP_ADDRESS_PARSE_OBJECT);
+        }
+        // 1.5获取商铺地址的经度
+        String lng = jsonObject.getJSONObject("result").getJSONObject("location").getString("lng");
+        // 1.6获取商铺地址的经度
+        String lat = jsonObject.getJSONObject("result").getJSONObject("location").getString("lat");
+        // 1.7生成商铺的经纬坐标
+        String shopLatLng = lat + "," + lng;
+
+        // 2.获取配送地址的经纬度
+        // 2.1拼接配送地址
+        String address = addressBook.getProvinceName() + addressBook.getCityName() + addressBook.getDistrictName() + addressBook.getDetail();
+        params.put("address", address);
+
+        // 2.2向百度地图请求地理编码的数据
+        String userCoding = HttpClientUtil.doGet(URL, params);
+        log.info("下单地址的地理编码：{}", userCoding);
+
+        // 2.3解析地理编码JSON格式为对象
+        JSONObject jsonObject1 = JSON.parseObject(userCoding);
+        // 2.4判断解析地址是否为空
+        if (!"0".equals(jsonObject1.getString("status"))) {
+            throw new OrderBusinessException(MessageConstant.ORDER_USER_ADDRESS_PARSE_OBJECT);
+        }
+        // 2.5获取商铺地址的经度
+        lng = jsonObject1.getJSONObject("result").getJSONObject("location").getString("lng");
+        // 2.6获取商铺地址的经度
+        lat = jsonObject1.getJSONObject("result").getJSONObject("location").getString("lat");
+        // 2.7生成商铺的经纬坐标
+        String userLatLng = lat+ "," + lng;
+
+        // 3.判断店铺和配送地址的距离
+        // 3.1拼接请求参数
+        Map<String, String> map = new LinkedHashMap<>();
+        map.put("origin", shopLatLng);
+        map.put("destination", userLatLng);
+        map.put("ak", AK);
+
+        log.info("路线规划请求参数:{}", map);
+
+        // 3.2通过百度地图的轻量级路线规划获得商铺和下单地址之间的骑行路线规划
+        String s = HttpClientUtil.doGet(URL2, map);
+        // 3.3解析地理编码JSON格式为对象
+        JSONObject jsonObject2 = JSON.parseObject(s);
+        // 3.4判断解析是否为正确
+        if (!"0".equals(jsonObject2.getString("status"))) {
+            throw new OrderBusinessException(MessageConstant.ORDER_ADDRESS_DESTINATION + jsonObject2.getString("status"));
+        }
+
+        // 3.5获取距离
+        JSONArray jsonArray = (JSONArray) jsonObject2.getJSONObject("result").get("routes");
+        Integer distance = (Integer) ((JSONObject) jsonArray.get(0)).get("distance");
+        log.info("距离：{}", distance);
+
+        // 4 判断是否超过配送距离(5000米）
+        if (distance > 5000) {
+            throw new OrderBusinessException(MessageConstant.ORDER_ADDRESS_OUT_DISTANCE);
+        }
     }
 
     /**
@@ -402,13 +500,13 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public void cancel(OrdersCancelDTO ordersCancelDTO) {
-            // 1.更新订单状态、取消原因、取消时间
-            Orders orders = new Orders();
-            orders.setId(ordersCancelDTO.getId());
-            orders.setStatus(Orders.CANCELLED);
-            orders.setCancelReason(ordersCancelDTO.getCancelReason());
-            orders.setCancelTime(LocalDateTime.now());
-            orderMapper.update(orders);
+        // 1.更新订单状态、取消原因、取消时间
+        Orders orders = new Orders();
+        orders.setId(ordersCancelDTO.getId());
+        orders.setStatus(Orders.CANCELLED);
+        orders.setCancelReason(ordersCancelDTO.getCancelReason());
+        orders.setCancelTime(LocalDateTime.now());
+        orderMapper.update(orders);
     }
 
     /**
