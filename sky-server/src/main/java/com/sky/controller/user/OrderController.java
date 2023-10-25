@@ -125,6 +125,7 @@ public class OrderController {
     @GetMapping("/reminder/{id}")
     public Result<String> reminder(@PathVariable Long id){
         log.info("客户催单：{}", id);
+        orderService.reminder(id);
         return Result.success();
     }
 
