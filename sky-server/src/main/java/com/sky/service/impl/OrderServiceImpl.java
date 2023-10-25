@@ -70,7 +70,7 @@ public class OrderServiceImpl implements OrderService {
 
     public static String URL = "https://api.map.baidu.com/geocoding/v3?";
 
-    public static String URL2 = "https://api.map.baidu.com/directionlite/v1/riding?";
+    public static String URL2 = "https://api.map.baidu.com/directionlite/v1/driving?";
 
     /**
      * 用户下单业务实现
